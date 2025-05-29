@@ -12,6 +12,12 @@ Ik ben een gepassioneerde student-ondernemer met een sterke interesse in technol
 
 ## 💼 Ervaring
 
+### ✅ Student Support Engineer – Combell 
+**Periode:** 2024  
+**Focus:** Helpen van Combell klanten 
+**Beschrijving:**  
+Het verhelpen van problemen die klanten ondervinden met hun hosting, domeinnaam, mailadressen...
+
 ### 🔐 Security Internship – Delaware Consulting  
 **Periode:** 2025  
 **Focus:** Beveiliging op het SAP BTP-platform  
@@ -19,23 +25,15 @@ Ik ben een gepassioneerde student-ondernemer met een sterke interesse in technol
 Verantwoordelijk voor het implementeren en auditen van security policies, identity & access management en compliance checks binnen SAP’s cloudplatform.
 
 ### 👦 Chiro Vrijwilliger  
-**Periode:** Sinds 2019  
+**Periode:** Sinds 2020  
 **Beschrijving:**  
-Verantwoordelijk voor het organiseren van activiteiten, begeleiden van kinderen en versterken van groepsdynamiek. Ontwikkeling van leiderschap, communicatie en organisatievaardigheden.
-
+Verantwoordelijk voor het organiseren van activiteiten, begeleiden van kinderen en jongeren.
 ---
 
 ## 🚀 Projecten & Initiatieven
 
-### 🧠 Quantum Computing Demystified  
-Een interactieve sessie met IBM rond de basisprincipes van quantum computing, inclusief demo-omgeving en experimenten.
-
-### 💡 AI als programmeerpartner  
-Verkenning van AI-tools die ontwikkelaars ondersteunen, met nadruk op productiviteit, ethiek en verantwoord gebruik.
-
-### 🔐 Rethink Security  
-Nieuwe manieren van denken over security-architectuur en hoe deze in balans te brengen met innovatie.
-
+### 💡 DevOps project
+In samenwerking met student development een werkende webapp opzetten.
 ---
 
 ## 🛠️ Vaardigheden
@@ -47,11 +45,11 @@ Nieuwe manieren van denken over security-architectuur en hoe deze in balans te b
 - Leiderschap
 
 ### Hard skills:
-- Terraform
 - SAP BTP
-- Git / GitHub
-- Bash / CLI
-- Markdown / Docs / Confluence
+- Git
+- Bash
+- Powershell
+- Linux administrating
 
 ---
 
