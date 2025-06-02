@@ -6,7 +6,7 @@
 
 ## 👋 Over mij
 
-Ik ben een gepassioneerde student-ondernemer met een sterke interesse in technologie, security en softwareontwikkeling. Via mijn opleiding en stages bouw ik praktijkervaring op in zowel infrastructuur als development.
+Ik ben een gepassioneerde student met een sterke interesse in technologie, security en softwareontwikkeling. Via mijn opleiding en stages bouw ik praktijkervaring op in op gebieden van infrastructuur en systemen
 
 ---
 
@@ -64,10 +64,8 @@ Technologie moet de maatschappij vooruithelpen zonder mensen of het milieu te be
 
 ## 📫 Contact
 
-- 📧 ruben@example.com  
+- 📧 ruben.redant@gmail.com 
 - 💼 [LinkedIn](https://www.linkedin.com/in/ruben-redant/)  
 - 💻 [GitHub](https://github.com/rubenredant)
 
 ---
-
-© 2025 Ruben Redant
