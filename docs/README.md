@@ -1,6 +1,6 @@
 # Ruben Redant
 
-**Student-Ondernemer | IT Enthousiast | Security op SAP BTP @ Delaware**
+**Student | IT Enthousiast | Security op SAP BTP @ Delaware**
 
 ---
 
