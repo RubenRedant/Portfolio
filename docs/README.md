@@ -14,7 +14,7 @@ Ik ben een gepassioneerde student met een sterke interesse in technologie, secur
 
 ### ✅ Student Support Engineer – Combell 
 **Periode:** 2024  
-**Focus:** Helpen van Combell klanten </br>
+**Focus:** Helpen van Combell klanten
 **Beschrijving:**  
 Het verhelpen van problemen die klanten ondervinden met hun hosting, domeinnaam, mailadressen...
 
