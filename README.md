@@ -34,6 +34,10 @@ Verantwoordelijk voor het organiseren van activiteiten, begeleiden van kinderen 
 
 ### 💡 DevOps project
 In samenwerking met student development een werkende webapp opzetten.
+
+
+### 💡 Homelab
+Het opzetten en configureren van mijn eigen homelab voor zaken zoals: self-managed cloud opslag, eigen mediaserver, veilige toegang tot publieke netwerken via VPN...
 ---
 
 ## 🛠️ Vaardigheden
