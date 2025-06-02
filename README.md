@@ -6,7 +6,7 @@
 
 ## 👋 Over mij
 
-Ik ben een gepassioneerde student met een sterke interesse in technologie, security en softwareontwikkeling. Via mijn opleiding en stages bouw ik praktijkervaring op in op gebieden van infrastructuur en systemen
+Ik ben een gepassioneerde student met een sterke interesse in technologie, security en infrastructuur. Via mijn opleiding en stages bouw ik praktijkervaring op in deze gebieden.
 
 ---
 
