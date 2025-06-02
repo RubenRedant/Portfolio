@@ -1,0 +1,54 @@
+#ansible/host_vars/srv001.yml
+---
+rhbase_firewall_allow_services:
+  - dns
+bind_allow_query:
+  - "any"
+bind_recursion: true  
+bind_allow_recursion:
+  - "any"
+bind_forward_only: true
+bind_forwarders: 
+  - 8.8.8.8
+  - 8.8.4.4
+bind_dnssec_enable: false
+bind_listen_ipv4:
+  - 127.0.0.1
+  - 172.16.128.1
+bind_query_log: "data/query.log"
+bind_zones:
+  - name: 'infra.lan'
+    primaries:
+      - 172.16.128.1
+    networks:
+      - '172.16'
+    name_servers:
+      - srv001.infra.lan.
+    hosts:
+      - name: srv001
+        ip: 172.16.128.1
+        aliases:
+          - ns
+          - ns1
+      - name: srv100
+        ip: 172.16.128.100
+        aliases:
+          - www
+      - name: '@'
+        ip: 172.16.128.100
+      - name: srv002
+        ip: 172.16.128.2
+        aliases:
+          - ns2
+      - name: srv003
+        ip: 172.16.128.3
+        aliases:
+          - dhcp
+      - name: srv004
+        ip: 172.16.128.4
+      - name: r001
+        ip: 172.16.255.254
+        aliases:
+          - gw
+      - name: control
+        ip: 172.16.128.253

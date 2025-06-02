@@ -1,0 +1,10 @@
+---
+roles:
+  - name: bertvv.rh-base
+  - name: bertvv.httpd
+  - name: bertvv.bind
+  - name: bertvv.dhcp
+collections:
+  - name: prometheus.prometheus
+  - name: grafana.grafana
+    version: 5.6.0

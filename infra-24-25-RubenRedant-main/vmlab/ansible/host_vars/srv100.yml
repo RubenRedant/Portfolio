@@ -1,0 +1,33 @@
+#ansible/host_vars/srv100.yml
+---
+rhbase_install_packages:
+  - bash-completion
+  - vim-enhanced
+  - bind-utils
+  - git
+  - nano
+  - setroubleshoot-server
+  - tree
+  - wget
+  - mariadb-server
+  - httpd
+  - mod_ssl
+  - php
+  - php-mysqlnd
+  - python3-libselinux
+  - python3-libsemanage
+  - python3-netaddr
+  - python3-pip
+  - python3-PyMySQL
+rhbase_start_services:
+  - mariadb
+  - httpd
+rhbase_firewall_allow_services:
+  - http
+  - https
+db_name: appdb
+db_user: appuser
+db_password: "let me in"
+
+httpd_ssl_certificate_key_file: appdb.key
+httpd_ssl_certificate_file: appdb.crt

@@ -1,0 +1,459 @@
+# 4. <ins>Kubernetes</ins>
+
+## 4.1. Set up the lab environment
+```
+brew install minikube
+```
+If which minikube fails after installation via brew, you may have to remove the old minikube links and link the newly installed binary:
+
+```
+brew unlink minikube
+brew link minikube
+```
+
+### Start your cluster
+MacOS heeft problemen met virtualbox als driver, omdat de host-only adapater DEPRECATED is.
+<br>
+Ik zal docker gebruiken in mijn opstelling:
+
+```
+minikube config set driver docker
+```
+
+<br>
+
+```
+minikube start --driver=docker
+```
+if minikube fails to start visit [drivers page](https://minikube.sigs.k8s.io/docs/drivers/)
+
+
+<br>
+
+Start Minikube with `minikube start` and follow [the instructions in the Minikube documentation](https://minikube.sigs.k8s.io/docs/start/) to get started
+- Start the Kubernetes Dashboard:
+    - Enable the appropriate Minikube plugins:
+
+        ```console
+        $ minikube addons enable metrics-server
+        $ minikube addons enable dashboard
+        ```
+
+<br>
+
+### Start kubernetes dashboard
+
+Enable the appropriate Minikube plugins:
+
+```
+minikube addons enable metrics-server
+minikube addons enable dashboard
+```
+<br>
+
+For additional insight into your cluster state, minikube bundles the Kubernetes Dashboard, allowing you to get easily acclimated to your new environment:
+
+```
+minikube dashboard
+```
+
+## 4.2. Basic operation
+the command kubectl get all is very useful to show you everything that is running on your Kubernetes cluster. Whenever you're changing the state of the cluster by creating new objects:
+
+```
+kubectl get all
+```
+
+<br>
+
+You can get an near real-time view on what happens on your cluster by issuing the following command in a separate Bash terminal:
+
+```
+watch -n1 kubectl get all
+```
+- Add option -o wide if you want to see on which node each
+
+_The watch command will repeat the kubectl command every second (-n1) and show the result._
+
+<br>
+
+### 4.2.1. Hello world!
+
+#### Create your first deployment
+"A Kubernetes Pod is a group of one or more Containers, tied together for the purposes of administration and networking. The Pod in this tutorial has only one Container. A Kubernetes Deployment checks on the health of your Pod and restarts the Pod's Container if it terminates. Deployments are the recommended way to manage the creation and scaling of Pods."
+
+1. Use the kubectl create command to create a Deployment that manages a Pod. The Pod runs a Container based on the provided Docker image.
+
+	```
+	# Run a test container image that includes a webserver
+	kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.39 -- /agnhost netexec --http-port=8080
+	```
+2. View the Deployment:
+
+	```
+	kubectl get deployments
+	```
+	
+3. View the Pod:
+
+	```
+	kubectl get pods
+	```
+	
+4. View cluster events:
+
+	```
+	kubectl get events
+	```
+
+5. View the kubectl configuration:
+	
+	```
+	kubectl config view
+	```
+
+6. View application logs for a container in a pod.
+
+	```
+	kubectl logs ''hello-rest-of-node-name''
+	```
+<br>
+
+#### Create a Service
+
+By default, the Pod is only accessible by its internal IP address within the Kubernetes cluster. To make the hello-node Container accessible from outside the Kubernetes virtual network, you have to expose the Pod as a Kubernetes Service.
+
+1. Expose the Pod to the public internet using the kubectl expose command:
+
+	```
+	kubectl expose deployment hello-node --type=LoadBalancer --port=8080
+
+	```
+	_The --type=LoadBalancer flag indicates that you want to 	expose your Service outside of the cluster._
+
+	_The application code inside the test image only listens 	on TCP port 8080. If you used kubectl expose to expose a 	different port, clients could not connect to that other 	port._
+	
+	
+2. View the Service you created:
+
+	```
+	kubectl get services
+	```
+	_On cloud providers that support load balancers, an 	external IP address would be provisioned to access the 	Service. On minikube, the LoadBalancer type makes the 	Service accessible through the minikube service 	command._
+	
+	
+3. Run the following command:
+
+	```
+	minikube service hello-node
+	```
+	_This opens up a browser window that serves your app and 	shows the app's response._
+
+#### Learn Kubernetes Basics
+##### Deploy an app
+1. Let’s deploy our first app on Kubernetes with the kubectl create deployment command. We need to provide the deployment name and app image location (include the full repository url for images hosted outside Docker Hub).
+
+	````
+	kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
+	````
+	This performed a few things for you:
+
+   - searched for a suitable node where an instance of the application could be run (we have only 1 available node)
+   - scheduled the application to run on that Node
+   - configured the cluster to reschedule the instance on a new Node when needed
+
+2. To list your deployments use the `kubectl get deployments` command:
+	````
+	kubectl get deployments
+	````
+
+   The kubectl proxy command can create a proxy that will forward communications into the cluster-wide, private network. The proxy can be terminated by pressing control-C and won't show any output while it's running.
+
+	You need to open a second terminal window to run the proxy.
+	````
+	kubectl proxy
+	````
+
+	We now have a connection between our host (the terminal) and the Kubernetes cluster. The proxy enables direct access to the API from these terminals.
+
+	You can see all those APIs hosted through the proxy endpoint. For example, we can query the version directly through the API using the curl command:
+	````
+	curl http://localhost:8001/version
+	`````
+
+3. The API server will automatically create an endpoint for each pod, based on the pod name, that is also accessible through the proxy.
+
+	First we need to get the Pod name, and we'll store it in the environment variable `POD_NAME`:
+	````
+	export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+	echo Name of the Pod: $POD_NAME
+	````
+
+4. You can access the Pod through the proxied API, by running:
+
+	````
+	curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME:8080/proxy/
+	````
+	
+#### Handige commands voor troubleshooting:
+````
+kubectl get - list resources
+kubectl describe - show detailed information about a resource
+kubectl logs - print the logs from a container in a pod
+kubectl exec - execute a command on a container in a pod
+````
+
+### 4.2.2. Working with manifest files
+
+navigeer naar juiste map en open terminal:
+
+```
+cd Documents/MT3/InfraAutomation/infra-24-25-RubenRedant/kubernetes/4.2
+```
+<br>
+
+Hieronder de commando's en output:
+
+```
+❯ kubectl apply -f bootcamp-deployment.yml
+deployment.apps/bootcamp-deployment created
+❯ kubectl apply -f bootcamp-service.yml
+service/bootcamp-service created
+```
+
+Om alle services te zien:
+
+```
+kubectl get service
+```
+
+Om bepaalde service te starten:
+
+```
+minikube service "service-naam"
+```
+
+Apply changes to existing kubernetes project:
+
+```
+kubectl apply -f "name"
+```
+
+
+Check logs van bepaalde pod:
+
+```
+kubectl logs -f "name"
+```
+
+Check on which nodes the pods are running.
+```
+kubectl get pods -o wide
+```
+
+### 4.3. Labels and selectors
+You can view labels with the command 
+
+```
+kubectl get <item-type> --show-labels. 
+```
+
+
+List all pods and their labels:
+
+```
+kubectl get pods --show-labels
+```
+
+You can search for Kubernetes resources with specific labels using the --selector or -l option, e.g.:
+
+```
+kubectl get pods --selector TAG=VALUE
+kubectl get pods --selector TAG!=VALUE
+kubectl get pods --selector TAG=VALUE,TAG=VALUE
+kubectl get pods -l 'TAG in (VAL1,VAL2,VAL3,...)'
+kubectl get pods -l 'TAG notin (VAL1,VAL2,VAL3,...)'
+```
+You can also perform other actions using selectors, e.g.
+
+```
+kubectl delete pods -l TAG=VALUE
+```
+
+### 4.3.1. Manipulating labels manually
+Labels can be added to existing Kubernetes resources with 
+
+```
+kubectl label <item> <key>=<value>.
+```
+_Add --overwrite option if key already exists_
+
+<br>
+
+A label can be removed with
+
+```
+kubectl label <item> <key>-
+```
+_Dash at the end of your key name_
+
+<br>
+
+
+Label All pods
+
+```
+❯ kubectl label pods echo-all-deployment-97d68d7cf-dm6bl application_type=demo
+
+pod/echo-all-deployment-97d68d7cf-dm6bl labeled
+❯ kubectl label pods echo-all-deployment-97d68d7cf-dnk6d application_type=demo
+
+pod/echo-all-deployment-97d68d7cf-dnk6d labeled
+❯ kubectl label pods echo-all-deployment-97d68d7cf-t4qt6 application_type=demo
+```
+<br>
+
+Change label of one pod:
+
+```
+❯ kubectl label pods echo-all-deployment-97d68d7cf-t4qt6 ❯ kubectl label pod bootcamp-all-deployment-54b994c775-c7gt4 application_type=test
+error: 'application_type' already has a value (demo), and --overwrite is false
+
+❯ kubectl label pod bootcamp-all-deployment-54b994c775-c7gt4 application_type=test --overwrite
+pod/bootcamp-all-deployment-54b994c775-c7gt4 labeled
+
+
+pod/echo-all-deployment-97d68d7cf-t4qt6 labeled
+❯ kubectl delete pods -l application_type=demo
+```
+<br>
+
+Delete all pods with application_type=demo
+
+```
+❯ kubectl delete pods -l 'application_type=demo'
+pod "bootcamp-all-deployment-54b994c775-ld9x5" deleted
+pod "bootcamp-deployment-b7785bd9b-vvs52" deleted
+```
+
+<br>
+
+Remove label from remaining pod:
+
+```
+❯ kubectl label pod bootcamp-all-deployment-54b994c775-dg2cd application_type-
+pod/bootcamp-all-deployment-54b994c775-dg2cd unlabeled
+```
+
+<br>
+
+Remove all Kubernetes resources currently running on cluster:
+
+```
+❯ kubectl delete pods --all
+kubectl delete deployments --all
+kubectl delete services --all
+
+pod "bootcamp-all-deployment-54b994c775-42bhf" deleted
+pod "bootcamp-all-deployment-54b994c775-gv5d9" deleted
+pod "bootcamp-deployment-b7785bd9b-znmxd" deleted
+pod "kubernetes-bootcamp-68cfbdbb99-pkq9d" deleted
+deployment.apps "bootcamp-all-deployment" deleted
+deployment.apps "bootcamp-deployment" deleted
+deployment.apps "hello-node" deleted
+deployment.apps "kubernetes-bootcamp" deleted
+service "bootcamp-all-service" deleted
+service "bootcamp-service" deleted
+service "hello-node" deleted
+service "kubernetes" deleted
+```
+
+### 4.3.2. Setting labels in the manifest file
+
+- Select pods in the production environment
+
+	```
+	❯ kubectl get pods -l env=production
+	NAME       READY   STATUS    RESTARTS   AGE
+	api-prod   1/1     Running   0          74s
+	db-prod    1/1     Running   0          74s
+	fe-prod    1/1     Running   0          74s
+	```
+- Select pods not in the production environment
+
+	```
+	❯ kubectl get pods --selector env!=production
+	NAME             READY   STATUS    RESTARTS   AGE
+	api-acceptance   1/1     Running   0          106s
+	api-dev          1/1     Running   0          106s
+	db-acceptance    1/1     Running   0          106s
+	db-dev           1/1     Running   0          106s
+	fe-acceptance    1/1     Running   0          106s
+	fe-dev           1/1     Running   0          106s
+	```
+
+- Select pods in the development and acceptance environment
+
+	```
+	❯ kubectl get pods -l 'env in (development, acceptance)'
+	NAME             READY   STATUS    RESTARTS   AGE
+	api-acceptance   1/1     Running   0          2m35s
+	api-dev          1/1     Running   0          2m35s
+	db-acceptance    1/1     Running   0          2m35s
+	db-dev           1/1     Running   0          2m35s
+	fe-acceptance    1/1     Running   0          2m35s
+	fe-dev           1/1     Running   0          2m35s
+	```
+
+- Select pods with release version 2.0
+
+	```
+	❯ kubectl get pods -l 'release_version=2.0'
+	NAME             READY   STATUS    RESTARTS   AGE
+	api-acceptance   1/1     Running   0          4m19s
+	api-dev          1/1     Running   0          4m19s
+	db-acceptance    1/1     Running   0          4m19s
+	db-dev           1/1     Running   0          4m19s
+	fe-acceptance    1/1     Running   0          4m19s
+	fe-dev           1/1     Running   0          4m19s
+	```
+
+- Select pods owned by the API-team with release version 2.0
+
+	```
+	❯ kubectl get pods -l 'team=api,release_version=2.0'
+	NAME             READY   STATUS    RESTARTS   AGE
+	api-acceptance   1/1     Running   0          5m13s
+	api-dev          1/1     Running   0          5m13s
+	```
+
+- Delete all pods in the development environment
+
+	```
+	❯ kubectl delete pods -l 'env=development'
+	pod "api-dev" deleted
+	pod "db-dev" deleted
+	pod "fe-dev" deleted
+	```
+- What is the quickest way to launch the pods you just deleted?
+
+	```
+	❯ kubectl apply -f example-pods-with-labels.yml
+	pod/fe-dev created
+	pod/fe-acceptance unchanged
+	pod/fe-prod unchanged
+	pod/api-dev created
+	pod/api-acceptance unchanged
+	pod/api-prod unchanged
+	pod/db-dev created
+	pod/db-acceptance unchanged
+	pod/db-prod unchanged
+	```
+
+### Clean up
+
+Whats the quickest way to delete all objects:
+
+```
+kubectl delete --all pods,deployments,services
+```

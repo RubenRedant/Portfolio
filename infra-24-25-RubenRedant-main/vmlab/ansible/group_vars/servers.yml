@@ -1,0 +1,31 @@
+# ansible/group_vars/servers.yml
+---
+rhbase_repositories:
+  - epel-release
+rhbase_install_packages:
+  - bash-completion
+  - vim-enhanced
+  - bind-utils
+  - git
+  - nano
+  - setroubleshoot-server
+  - tree
+  - wget
+
+rhbase_users:
+  - name: ruben
+    groups:
+      - wheel
+    password: '$6$9.q2q.g0Pnpppszo$PBFu8CFI8pnoN3SOOrKsYksVburhjDiTI.WfB0Z0pLGFU9X6Ch2aH.aMqhRAPLRwEewMVANY9mW6z9in9oPL8.'
+    ssh_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDW2Gp3rbPrJGKe0q6D7a9Mq00O3LaipOJhyuctRsyrx4Q4DBH9RLd0Cm5/HTDGl3Fe6DJXndmePTqODRTSHFCfGlBEmYEgApylPTNNP3HnSk+p3anastsFwsHvZFMVcxjXMZJRbKO6LdscmD33PJfrMuvFi2RRb2ckF7QorfNzqDB6jVQlWccl99jojEZQvOwTtAdC2CDcssTa4v7kSJwzoWA0vxbRfDdM2zawyJ8CuMGjDt2aXJYYQzJeV3/a807chC5lp6RmD/V041/cQfzZO2t3DZZcDBq1Ui0aA4KjPowPU8UtLiY81mHOWMGXLHWJlvcLcSGjbYS09JlAx/YGC1FWbnfLqm3gNJXtri1McXYsLxU0e8fHOSp9c5FCLnlHFgyUErA31no+1gucX04RgSvprv5UFR4Dedkc3ab3w7tCFCnmwajzk5zO32g8jn0uZY1ZJl/5XP5CRaotHwYXNiRKclE+WeczF7JtnZ5XBdIGbl7igxupxGcBunvN138= The access key for Github'
+
+prometheus_scrape_configs:
+  - job_name: 'node_exporter'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets:
+          - 'srv100.infra.lan:9100'
+          - 'srv001.infra.lan:9100'
+          - 'srv002.infra.lan:9100'
+          - 'srv003.infra.lan:9100'
+          - 'srv004.infra.lan:9100'

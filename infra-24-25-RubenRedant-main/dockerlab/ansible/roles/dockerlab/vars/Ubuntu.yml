@@ -1,0 +1,23 @@
+# ansible/roles/dockerlab/vars/Ubuntu.yml
+---
+
+dockerlab_packages:
+  - bash-completion
+  - bats
+  - curl
+  - dnsutils
+  - docker.io
+  - docker-clean
+  - docker-compose
+  - git
+  - jq
+  - mysql-client
+  - python3-docker
+  - python3-netaddr
+  - python3-pip
+  - silversearcher-ag
+  - tree
+  - yamllint
+
+dockerlab_services:
+  - docker.service

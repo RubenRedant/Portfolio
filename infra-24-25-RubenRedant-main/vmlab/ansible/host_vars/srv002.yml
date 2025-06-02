@@ -1,0 +1,25 @@
+#ansible/host_vars/srv002.yml
+---
+rhbase_firewall_allow_services:
+  - dns
+bind_allow_query:
+  - "any"
+bind_recursion: true
+bind_allow_recursion:
+  - "any"
+bind_forward_only: true
+bind_forwarders:
+  - 8.8.8.8
+  - 8.8.4.4
+bind_dnssec_enable: false
+bind_listen_ipv4:
+  - 127.0.0.1
+  - 172.16.128.2
+bind_query_log: "data/query.log"
+bind_zones:
+  - name: 'infra.lan'
+    type: secondary
+    primaries:
+      - 172.16.128.1
+    networks:
+      - '172.16'

@@ -1,0 +1,143 @@
+# site.yml
+---
+- name: Configure srv100 # Each task should have a name
+  hosts: srv100          # Indicates hosts this applies to (host or group name)
+  roles:                 # Enumerate roles to be applied
+    - bertvv.rh-base
+    - bertvv.httpd
+  tasks:
+    - name: Copy db.sql to /tmp/
+      ansible.builtin.copy: 
+        src: /vagrant/ansible/files/db.sql
+        dest: /tmp/db.sql
+      notify:
+        - Create database
+    - name: Copy test.php to /var/www/html and rename to index.html
+      ansible.builtin.copy:
+        src: /vagrant/ansible/files/test.php
+        dest: /var/www/html/index.php
+    - name: Create database user 
+      community.mysql.mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: "{{ db_name }}.*:ALL,GRANT"
+        login_unix_socket: /var/lib/mysql/mysql.sock
+    - name: Put SELinux in permissive mode, logging actions that would be blocked.
+      ansible.posix.selinux:
+        policy: targeted
+        state: permissive
+  handlers:
+    - name: Create database
+      community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: import
+        target: /tmp/db.sql
+        login_unix_socket: /var/lib/mysql/mysql.sock
+
+- name: Set SELinux to permissive mode
+  hosts: srv100
+  become: yes
+  tasks:
+    - name: Set SELinux to permissive
+      ansible.posix.selinux:
+        policy: targeted
+        state: permissive
+
+- name: Configure srv001
+  hosts: srv001
+  roles:
+    - bertvv.rh-base
+    - bertvv.bind
+  tasks:
+    - name: permit dns traffic
+      ansible.posix.firewalld:
+        service: dns
+        permanent: true
+        state: enabled
+    - name: Set SELinux in permissive mode
+      selinux:
+        policy: targeted
+        state: permissive
+- name: Configure srv002
+  hosts: srv002
+  roles:
+    - bertvv.rh-base
+    - bertvv.bind
+- name: Configure srv003
+  hosts: srv003
+  roles:
+    - bertvv.rh-base
+    - bertvv.dhcp
+
+- name: Install Node Exporter
+  hosts: all
+  become: yes
+  roles:
+    - prometheus.prometheus.node_exporter
+
+- name: Install prometheus role
+  hosts: srv004
+  become: yes
+  pre_tasks:
+    - name: Update DNS server in /etc/resolv.conf
+      lineinfile:
+        path: /etc/resolv.conf
+        regexp: '^nameserver'
+        line: 'nameserver 172.16.128.1'  # Replace with your DNS server IP address
+  roles:
+    - prometheus.prometheus.prometheus
+#    - grafana.grafana.grafana
+
+- name: Open port 3000/tcp on srv004
+  hosts: srv004
+  roles:
+  - bertvv.rh-base
+  tasks:
+    - name: open port 3000/tcp
+      ansible.posix.firewalld:
+        port: 3000/tcp
+        permanent: true
+        state: enabled
+    - name: reload firewall
+      service:
+        name: firewalld
+        state: reloaded
+
+- name: Install Grafana and configure Prometheus data source
+  hosts: srv004
+  become: yes
+  roles:
+    - grafana.grafana.grafana
+  vars:
+    grafana_config:
+      server:
+        http_port: 3000
+      paths:
+        data: /var/lib/grafana
+        logs: /var/log/grafana
+        plugins: /var/lib/grafana/plugins
+    grafana_datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://localhost:9090
+        is_default: true
+    grafana_security:
+      admin_user: "vagrant"
+      admin_password: "vagrant"  # Replace with your desired admin password
+
+
+- name: Open port 9100/tcp on all servers
+  hosts: all
+  roles:
+  - bertvv.rh-base
+  tasks:
+    - name: open port
+      ansible.posix.firewalld:
+        port: 9100/tcp
+        permanent: true
+        state: enabled
+    - name: reload firewall
+      service:
+        name: firewalld
+        state: reloaded

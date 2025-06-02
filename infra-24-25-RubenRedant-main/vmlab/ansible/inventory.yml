@@ -1,0 +1,30 @@
+---
+servers:
+  vars:
+    ansible_user: vagrant
+    ansible_become: true
+  hosts:
+    srv100:
+      ansible_host: 172.16.128.100
+      ansible_ssh_private_key_file: ../.vagrant/machines/srv100/virtualbox/private_key
+    srv001:
+      ansible_host: 172.16.128.1
+      ansible_ssh_private_key_file: ../.vagrant/machines/srv001/virtualbox/private_key
+    srv002:
+      ansible_host: 172.16.128.2
+      ansible_ssh_private_key_file: ../.vagrant/machines/srv002/virtualbox/private_key
+    srv003:
+      ansible_host: 172.16.128.3
+      ansible_ssh_private_key_file: ../.vagrant/machines/srv003/virtualbox/private_key
+    srv004:
+      ansible_host: 172.16.128.4
+      ansible_ssh_private_key_file: ../.vagrant/machines/srv004/virtualbox/private_key
+routers:
+  hosts:
+    r001:
+      ansible_host: 172.16.255.254
+      ansible_user: vyos
+      ansible_ssh_pass: vyos
+      ansible_network_os: vyos
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+      ansible_connection: network_cli

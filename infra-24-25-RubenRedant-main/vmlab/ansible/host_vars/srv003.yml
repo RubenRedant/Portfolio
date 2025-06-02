@@ -1,0 +1,29 @@
+#ansible/host_vars/srv003.yml
+---
+rhbase_firewall_allow_services:
+  - dhcp
+  - dns
+
+dhcp_global_domain_name: 'infra.lan'
+dhcp_global_domain_name_servers: 
+  - 172.16.128.1
+  - 172.16.128.2
+dhcp_global_routers: 172.16.255.254
+
+dhcp_global_default_lease_time: 14400
+dhcp_global_max_lease_time: 14400
+
+dhcp_subnets:
+  - ip: 172.16.0.0
+    netmask: 255.255.0.0
+    range_begin: 172.16.0.2
+    range_end: 172.16.127.254
+#  - ip: 172.16.192.0
+    #netmask: 255.255.192.0
+    #range_begin: 172.16.192.1
+    #range_end: 172.16.255.253
+
+#dhcp_hosts:
+#  - name: r001
+#    mac: '0800.27c3.bd35'
+#    ip: 172.16.255.254

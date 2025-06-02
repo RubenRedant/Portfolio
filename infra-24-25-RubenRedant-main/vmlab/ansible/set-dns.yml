@@ -1,0 +1,10 @@
+---
+- name: Set DNS Server
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Update DNS server in /etc/resolv.conf
+      lineinfile:
+        path: /etc/resolv.conf
+        regexp: '^nameserver'
+        line: 'nameserver 172.16.128.1'
